@@ -5,10 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.TankDrive;
+import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -18,12 +22,26 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  //subsystems
+  public static final DriveTrain drivetrain = new DriveTrain();
+  
+  //commands
+  
+  //Joysticks
+  public static final XboxController XboxStick = new XboxController(DriveConstants.XBOX_JOY);
+  public static final Joystick leftStick = new Joystick(DriveConstants.LEFT_JOY);
+  public static final Joystick rightStick = new Joystick(DriveConstants.RIGHT_JOY);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    if(leftStick.getZ()<=0 || rightStick.getZ()<=0){
+      drivetrain.setDefaultCommand(new ArcadeDrive());
+    }else if(leftStick.getZ()>0 || rightStick.getZ()>0){
+      drivetrain.setDefaultCommand(new TankDrive());
+    }
+
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -42,7 +60,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return new SequentialCommandGroup(
+
+    );
   }
 }
