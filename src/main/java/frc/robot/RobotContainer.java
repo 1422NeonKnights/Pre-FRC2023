@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.commands.ArcadeDrive;
-import frc.robot.commands.TankDrive;
+import frc.robot.commands.GoForward;
+import frc.robot.commands.XboxDrive;
 import frc.robot.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -33,15 +33,17 @@ public class RobotContainer {
   public static final Joystick leftStick = new Joystick(DriveConstants.LEFT_JOY);
   public static final Joystick rightStick = new Joystick(DriveConstants.RIGHT_JOY);
 
+  //gyro
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    if(leftStick.getZ()<=0 || rightStick.getZ()<=0){
-      drivetrain.setDefaultCommand(new ArcadeDrive());
-    }else if(leftStick.getZ()>0 || rightStick.getZ()>0){
-      drivetrain.setDefaultCommand(new TankDrive());
-    }
+    // if(leftStick.getZ()<=0 || rightStick.getZ()<=0){
+    //   drivetrain.setDefaultCommand(new ArcadeDrive());
+    // }else if(leftStick.getZ()>0 || rightStick.getZ()>0){
+    //   drivetrain.setDefaultCommand(new TankDrive());
+    // }
 
-
+    drivetrain.setDefaultCommand(new XboxDrive());
+      
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -61,6 +63,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new SequentialCommandGroup(
+      new GoForward()
+    
 
     );
   }

@@ -4,14 +4,14 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 
-public class ArcadeDrive extends CommandBase {
-  /** Creates a new ArcadeDrive. */
-  public ArcadeDrive() {
+public class MarioDrive extends CommandBase {
+  double moveSpeed = 0;
+  /** Creates a new MarioDrive. */
+  public MarioDrive() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.drivetrain);
   }
@@ -23,19 +23,24 @@ public class ArcadeDrive extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveSpeed = -RobotContainer.leftStick.getY() * DriveConstants.MAX_SPEED;
-    double rotateSpeed = -RobotContainer.leftStick.getX() * DriveConstants.MAX_SPEED;
+    if (RobotContainer.XboxStick.getAButtonPressed()) {
+      moveSpeed = DriveConstants.MAX_SPEED;
+    } else if (RobotContainer.XboxStick.getAButtonReleased()) {
+      moveSpeed = 0;
+    }
+    if (RobotContainer.XboxStick.getBButtonPressed()) {
+      moveSpeed = -DriveConstants.MAX_SPEED;
+    } else if (RobotContainer.XboxStick.getBButtonReleased()) {
+      moveSpeed = 0;
+    }
 
+    double rotateSpeed = -RobotContainer.XboxStick.getLeftX();
     RobotContainer.drivetrain.arcadeDrive(moveSpeed, rotateSpeed);
-    
-    SmartDashboard.putNumber("Controller Value", RobotContainer.drivetrain.returnControllerValue());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    RobotContainer.drivetrain.arcadeDrive(0, 0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

@@ -7,12 +7,18 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 
 public class DriveTrain extends SubsystemBase {
+
+  public static ADXRS450_Gyro gyro = new ADXRS450_Gyro();
+
   //define TalonSRX
   WPI_TalonSRX rightMotor1;
   WPI_TalonSRX rightMotor2;
@@ -89,6 +95,8 @@ public class DriveTrain extends SubsystemBase {
 
     //differential drive for arcade/tank
     differentialDrive = new DifferentialDrive(leftMotors, rightMotors);
+
+    SmartDashboard.putNumber("gyro", gyro.getAngle());
   }
 
   //tank drive
@@ -99,5 +107,9 @@ public class DriveTrain extends SubsystemBase {
   //arcade drive
   public void arcadeDrive(double moveSpeed, double rotateSpeed){
     differentialDrive.arcadeDrive(moveSpeed, rotateSpeed);
+  }
+
+  public double returnControllerValue(){
+    return RobotContainer.leftStick.getY();
   }
 }

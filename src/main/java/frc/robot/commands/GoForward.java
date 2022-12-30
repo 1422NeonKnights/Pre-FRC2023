@@ -4,38 +4,44 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.DriveTrain;
 
-public class ArcadeDrive extends CommandBase {
-  /** Creates a new ArcadeDrive. */
-  public ArcadeDrive() {
+public class GoForward extends CommandBase {
+  double speed = 0.6;
+  double rotation = 0;
+  /** Creates a new GoForward. */
+  public GoForward() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.drivetrain);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    DriveTrain.gyro.reset();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double moveSpeed = -RobotContainer.leftStick.getY() * DriveConstants.MAX_SPEED;
-    double rotateSpeed = -RobotContainer.leftStick.getX() * DriveConstants.MAX_SPEED;
+    //gets the gyro value
+    double gyroValue = DriveTrain.gyro.getAngle();
 
-    RobotContainer.drivetrain.arcadeDrive(moveSpeed, rotateSpeed);
+    //corrects the rotation value for the robot within
+    if(Math.round(gyroValue)>0){
+      rotation =  gyroValue/15;
+    }else if(Math.round(gyroValue)<0){
+      rotation =  gyroValue/15;
+    }
     
-    SmartDashboard.putNumber("Controller Value", RobotContainer.drivetrain.returnControllerValue());
+    RobotContainer.drivetrain.arcadeDrive(speed, rotation);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    RobotContainer.drivetrain.arcadeDrive(0, 0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
